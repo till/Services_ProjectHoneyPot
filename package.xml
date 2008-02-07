@@ -36,7 +36,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <file name="example.php" role="doc" />
    </dir>
    <dir name="tests" baseinstalldir="Services_ProjectHoneyPot">
-    <file name="check-invalid.phpt" role="test" />
+    <file name="test-invalid.phpt" role="test" />
    </dir>
   </dir> <!-- / -->
  </contents>
