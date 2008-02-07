@@ -1,0 +1,14 @@
+<?php
+// you need an account!
+$access_key = '';
+
+$valid_ip   = '24.132.194.14';
+$valid_host = 'heise.de';
+
+/**
+ * Maybe refresh?
+ * @see http://www.projecthoneypot.org/top_harvesters.php
+ */
+$harvester  = '64.56.65.65';
+
+?>
