@@ -47,10 +47,10 @@ require_once 'PEAR/Exception.php';
  * @category Services
  * @package  Services_ProjectHoneyPot
  * @author   Till Klampaeckel <till@php.net>
- * @version  Release: @package_version@
  * @license  http://www.opensource.org/licenses/bsd-license.php
+ * @version  Release: @package_version@
  * @link     http://code.google.com/p/services-projecthoneypot/
- * @uses     Pear_Exception
+ * @uses     PEAR_Exception
  * @see      Services_ProjectHoneyPot
  */
 class Services_ProjectHoneyPot_Exception extends PEAR_Exception

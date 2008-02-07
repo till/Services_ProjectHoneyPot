@@ -54,8 +54,8 @@ require_once 'Services/ProjectHoneyPot/Exception.php';
  * @category Services
  * @package  Services_ProjectHoneyPot
  * @author   Till Klampaeckel <till@php.net>
+ * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @version  Release: @package_version@
- * @license  http://www.opensource.org/licenses/bsd-license.php
  * @link     http://code.google.com/p/services-projecthoneypot/
  * @uses     Net_CheckIP2
  * @uses     Net_DNS
@@ -117,8 +117,9 @@ class Services_ProjectHoneyPot
     /**
      * Initialize the class.
      *
-     * @param  string $accesskey
-     * @param  bool   $debug
+     * @param string $accesskey The accesskey provided by Project HoneyPot.
+     * @param bool   $debug     Enable debug, or maybe not? :-)
+     * 
      * @return Services_ProjectHoneyPot
      * @throws Services_ProjectHoneyPot_Exception
      * @uses   Services_ProjectHoneyPot::$accesskey
@@ -147,7 +148,8 @@ class Services_ProjectHoneyPot
     /**
      * Set the access key necessary to use this service.
      *
-     * @param  string $accesskey
+     * @param string $accesskey Another accesskey.
+     * 
      * @return string $accesskey
      * @see    Services_ProjectHoneyPot::factory
      */
@@ -160,7 +162,8 @@ class Services_ProjectHoneyPot
     /**
      * Sets another (than the default) server to query.
      *
-     * @param  string $server
+     * @param string $server The DNS server to query.
+     * 
      * @return string $server
      */
     public function setDnsBlacklist($server)
@@ -172,7 +175,9 @@ class Services_ProjectHoneyPot
     /**
      * Checks if the supplied IP is listed.
      * 
-     * @param  string $ip IP or hostname
+     * @param string $ip IP or hostname. Using an IP is more "expensive" because
+     *                   we will need to resolve it.
+     * 
      * @return array
      * @uses   Services_ProjectHoneyPot::getHostForLookup
      * @uses   Services_ProjectHoneyPot::parseResponse
@@ -228,27 +233,24 @@ class Services_ProjectHoneyPot
     }
 
     /**
-     * getHostForLookup
-     *
      * Builds the host to query.
      *
-     * @param  string $ip
+     * @param string $ip The IP which needs to be resolved.
+     * 
      * @return string $ip_query
      * @uses   Services_ProjectHoneyPot::$accesskey
      * @uses   Services_ProjectHoneyPot::$dns_blacklist
      */
     protected function getHostForLookup($ip)
     {
-        $ip_query = $ip . '.' . $this->accesskey;
-        $ip_query = implode('.', array_reverse(explode('.', $ip_query)));
-        $ip_query.= '.' . $this->dns_blacklist;
+        $ip_query  = $ip . '.' . $this->accesskey;
+        $ip_query  = implode('.', array_reverse(explode('.', $ip_query)));
+        $ip_query .= '.' . $this->dns_blacklist;
 
         return $ip_query;
     }
 
     /**
-     * parseResponse
-     *
      * Parses the response object into a 'readable' format
      *
      * @param  object $respObj
@@ -346,35 +348,36 @@ class Services_ProjectHoneyPot
     }
 
     /**
-     * setHoneypot
-     *
      * Sets an URL or an array of URLs to use for
      * redirecting later on, if the IP is found
      * 'guilty'. ;-)
      *
-     * @param  string|array $honeypot
+     * @param string|array $honeypot Set a honeypot (string), or multiple.
+     * 
      * @return null|string|array $honeypot
      * @uses   Services_ProjectHoneyPot::$honeypot
+     * @todo   Implement.
      */    
     public function setHoneypot($honeypot = null)
     {
-        if (is_null($honeypot) === false && empty($honeypot) === false) {
+        if (null !== $honeypot && $honeypot != '') {
             $this->honeypot = $honeypot;
         }
         return $honeypot;
     }
 
     /**
-     * Mostly a placeholder.
+     * Mostly a placeholder for what's to come. Currently we return a honeypot
+     * which has been supplied with self::setHoneypot before.
      * 
-     * 
-     * @todo   Implement.
+     * @todo   Implement retrieval of honeypots from projecthoneypot.org.
      * @return string|array|null
      * @uses   Services_ProjectHoneyPot::$honeypot
+     * @see    self::setHoneypot()
      */
     public function getHoneyPot()
     {
-        if (empty($this->honeypot) === true) {
+        if ($this->honeypot == '') {
             return null;
         }
         return $this->honeypot;
