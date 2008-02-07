@@ -17,11 +17,11 @@ try {
     $sphp = Services_ProjectHoneyPot::factory($access_key);
 
     //$ip = $_SERVER['REMOTE_ADDR'];
-    $ip = '24.132.194.14';
+    //$ip = '24.132.194.14';
     //$ip = '62.75.159.212';
     //$ip = 'heise.de';
 
-    $status = $sphp->query($ip);
+    $status = $sphp->query($harvester);
 
 }
 catch (Services_ProjectHoneyPot_Exception $e) {
