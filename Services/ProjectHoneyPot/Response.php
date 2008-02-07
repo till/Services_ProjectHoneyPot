@@ -62,9 +62,10 @@ class Services_ProjectHoneyPot_Response
     /**
      * Parse the response into an array or object.
      * 
-     * @return mixed 
      * @param SimpleXML $respObj The response.
      * @param String    $format  Do we return an array or object?
+     *
+     * @return mixed
      */
     static function parse($respObj, $format = 'array')
     {

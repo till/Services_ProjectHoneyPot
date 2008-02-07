@@ -288,8 +288,8 @@ class Services_ProjectHoneyPot
      */
     protected function parseResponse($respObj)
     {
-        return Services_ProjectHoneyPot::parse(
-            $response, $this->responseFormat);
+        return Services_ProjectHoneyPot::parse($response,
+            $this->responseFormat);
     }
 
     /**
