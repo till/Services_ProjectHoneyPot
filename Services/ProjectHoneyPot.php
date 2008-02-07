@@ -49,6 +49,11 @@ require_once 'Net/CheckIP2.php';
 require_once 'Services/ProjectHoneyPot/Exception.php';
 
 /**
+ * Services_ProjectHoneyPot_Response
+ */
+require_once 'Services/ProjectHoneyPot/Response.php';
+
+/**
  * A class to interface services provided by ProjectHoneyPot.org
  *
  * @category Services
@@ -288,8 +293,8 @@ class Services_ProjectHoneyPot
      */
     protected function parseResponse($respObj)
     {
-        return Services_ProjectHoneyPot::parse($response,
-            $this->responseFormat);
+        return Services_ProjectHoneyPot_Response::parse($respObj,
+            $this->responseFormat, $this->debug);
     }
 
     /**

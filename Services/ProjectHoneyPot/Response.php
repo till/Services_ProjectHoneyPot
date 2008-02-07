@@ -67,7 +67,7 @@ class Services_ProjectHoneyPot_Response
      *
      * @return mixed
      */
-    static function parse($respObj, $format = 'array')
+    static function parse($respObj, $format = 'array', $debug = false)
     {
         $ip = $respObj->answer[0]->address;
 
@@ -81,7 +81,7 @@ class Services_ProjectHoneyPot_Response
             $response['comment_spammer'] = null;
             $response['search_engine']   = null;
     
-            if ($this->debug === true) {
+            if ($debug === true) {
                 $response['debug'] = $respObj;
             } else {
                 $response['debug'] = null;
@@ -168,7 +168,7 @@ class Services_ProjectHoneyPot_Response
             $response->comment_spammer = null;
             $response->search_engine   = null;
     
-            if ($this->debug === true) {
+            if ($debug === true) {
                 $response->debug = $respObj;
             } else {
                 $response->debug = null;
