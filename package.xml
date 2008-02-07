@@ -28,15 +28,32 @@ http://pear.php.net/dtd/package-2.0.xsd">
  <contents>
   <dir name="/">
    <dir name="Services">
+    <dir name="ProjectHoneyPot">
+     <dir name="Response">
+      <file name="Exception.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir>
+     <file name="Exception.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="Response.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+    </dir>
     <file name="ProjectHoneyPot.php" role="php">
      <tasks:replace from="@package_version@" to="version" type="package-info" />
     </file>
    </dir>
    <dir name="examples" baseinstalldir="Services_ProjectHoneyPot">
+    <file name="config.php-dist" role="doc" />
     <file name="example.php" role="doc" />
    </dir>
    <dir name="tests" baseinstalldir="Services_ProjectHoneyPot">
-    <file name="test-invalid.phpt" role="test" />
+    <file name="config.php-dist" role="test" />
+    <file name="test-harvester.phpt" role="test" />
+    <file name="test-valid.phpt" role="test" />
+    <file name="test-valid-host.phpt" role="test" />
    </dir>
   </dir> <!-- / -->
  </contents>
