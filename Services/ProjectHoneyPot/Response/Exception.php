@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2007-2008, Till Klampaeckel
+ * Copyright (c) 2008, Till Klampaeckel
  * 
  * All rights reserved.
  * 
@@ -36,13 +36,13 @@
  */
 
 /**
- * PEAR_Exception
+ * Services_ProjectHoneyPot_Exception
  * @ignore
  */
-require_once 'PEAR/Exception.php';
+require_once 'Services/ProjectHoneyPot/Exception.php';
 
 /**
- * Exception class for Services_ProjectHoneyPot
+ * Exception class for Services_ProjectHoneyPot_Response
  *
  * @category Services
  * @package  Services_ProjectHoneyPot
@@ -53,7 +53,8 @@ require_once 'PEAR/Exception.php';
  * @uses     PEAR_Exception
  * @see      Services_ProjectHoneyPot
  */
-class Services_ProjectHoneyPot_Exception extends PEAR_Exception
+class Services_ProjectHoneyPot_Response_Exception
+    extends Services_ProjectHoneyPot_Exception
 {
 }
 ?>

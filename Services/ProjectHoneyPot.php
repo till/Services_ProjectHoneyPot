@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2008, Till Klampaeckel
+ * Copyright (c) 2007-2008, Till Klampaeckel
  * 
  * All rights reserved.
  * 
@@ -70,6 +70,8 @@ class Services_ProjectHoneyPot
     const ERR_NO_IP        = 668;
     const ERR_UNKNOWN_RESP = 669;
     const ERR_UNKNOWN_API  = 670;
+    const ERR_INTERNAL     = 671;
+    const ERR_USER         = 672;
 
     /**
      * @var string $accesskey
@@ -108,7 +110,7 @@ class Services_ProjectHoneyPot
     /**
      * @var string
      */
-    protected $responseType = 'array'; // object
+    protected $responseFormat = 'array'; // object
 
     /**
      * Enforce using Services_ProjectHoneyPot::factory().
@@ -148,6 +150,25 @@ class Services_ProjectHoneyPot
             $cls->debug = $debug;
         }
         return $cls;
+    }
+    
+    /**
+     * Set the format to retrieve the info in.
+     * 
+     * @param string $format Either 'array' or 'object'.
+     * 
+     * @return string
+     * @throws Services_ProjectHoneyPot_Exception On unknown/unsupported format.
+     */
+    public function setResponseFormat($format)
+    {
+        if (!in_array($format, array('array', 'object'))) {
+            throw new Services_ProjectHoneyPot_Exception(
+                'Unknown or unsupported format: ' . $format,
+                self::ERR_USER
+            );
+        }
+        return $this->responseFormat = $format;
     }
 
     /**
@@ -267,91 +288,8 @@ class Services_ProjectHoneyPot
      */
     protected function parseResponse($respObj)
     {
-        $ip = $respObj->answer[0]->address;
-
-        list($foobar, $last_activity, $score, $type) = explode('.', $ip);
-
-        $response                    = array();
-        $response['suspicious']      = null;
-        $response['harvester']       = null;
-        $response['comment_spammer'] = null;
-        $response['search_engine']   = null;
-
-        if ($this->debug === true) {
-            $response['debug'] = $respObj;
-        } else {
-            $response['debug'] = null;
-        }
-
-        $type_hr = '';
-        switch ($type) {
-        case 0:
-            $type_hr .= 'Search Engine';
-            
-            $score         = null;
-            $last_activity = null;
-            
-            $response['seach_engine'] = 1;
-            break;
-
-        case 1:
-            $type_hr .= 'Suspicious';
-            
-            $response['suspicious'] = 1;
-            break;
-
-        case 2:
-            $type_hr .= 'Harvester';
-            break;
-
-        case 3:
-            $type_hr .= 'Suspicious & Harvester';
-            
-            $response['suspicious'] = 1;
-            $response['harvester']  = 1;
-            break;
-
-        case 4:
-            $type_hr .= 'Comment Spammer';
-            
-            $response['comment_spammer'] = 1;
-            break;
-
-        case 5:
-            $type_hr .= 'Suspicious & Comment Spammer';
-            
-            $response['suspicious']      = 1;
-            $response['comment_spammer'] = 1;
-            break;
-
-        case 6:
-            $type_hr .= 'Harvester & Comment Spammer';
-            
-            $response['harvester']       = 1;
-            $response['comment_spammer'] = 1;
-            break;
-
-        case 7:
-            $type_hr .= 'Suspicious & Harvester & Comment Spammer';
-            
-            $response['suspicious']      = 1;
-            $response['harvester']       = 1;
-            $response['comment_spammer'] = 1;
-            break;
-
-        default:
-            throw new Services_ProjectHoneyPot_Exception(
-                'Unknown type ' . $type . ' in response. API changes?',
-                self::ERR_UNKNOWN_API
-            );
-        }
-
-        $response['last_activity'] = $last_activity;
-        $response['score']         = $score;
-        $response['type']          = $type;
-        $response['type_hr']       = $type_hr;
-
-        return $response;
+        return Services_ProjectHoneyPot::parse(
+            $response, $this->responseFormat);
     }
 
     /**
