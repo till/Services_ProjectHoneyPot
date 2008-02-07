@@ -104,6 +104,11 @@ class Services_ProjectHoneyPot
      * @see Services_ProjectHoneyPot::getHoneypot
      */
     protected $honeypot;
+    
+    /**
+     * @var string
+     */
+    protected $responseType = 'array'; // object
 
     /**
      * Enforce using Services_ProjectHoneyPot::factory().
@@ -211,7 +216,7 @@ class Services_ProjectHoneyPot
                 self::ERR_NO_KEY
             );
         }
-        $ip  = $this->getHostForLookup($ip);
+        $ip = $this->getHostForLookup($ip);
 
         $response = $this->resolver->query($ip);
         if ($response === false) {
@@ -253,9 +258,11 @@ class Services_ProjectHoneyPot
     /**
      * Parses the response object into a 'readable' format
      *
-     * @param  object $respObj
+     * @param object $respObj Whatever we received from the API.
+     * 
      * @return array
-     * @see    http://projecthoneypot.org/httpbl_api.php
+     * @link   http://projecthoneypot.org/httpbl_api.php
+     * @see    self::query()
      * @throws Services_ProjectHoneyPot_Exception
      */
     protected function parseResponse($respObj)
@@ -386,8 +393,9 @@ class Services_ProjectHoneyPot
     /**
      * Enable debug on runtime.
      *
-     * @param  bool $debug
-     * @return mixed
+     * @param boolean $debug To debug (true), or not to debug (false)?
+     * 
+     * @return boolean
      * @uses   Services_ProjectHoneyPot::$debug
      */
     public function setDebug($debug)
