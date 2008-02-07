@@ -146,7 +146,7 @@ class Services_ProjectHoneyPot
                 $cls->resolver->getCode()
             );
         }
-        if (is_null($debug) === false && is_bool($debug) === true) {
+        if ($debug !== null && is_bool($debug) === true) {
             $cls->debug = $debug;
         }
         return $cls;
@@ -214,7 +214,7 @@ class Services_ProjectHoneyPot
      */
     public function query($ip = '')
     {
-        if (empty($ip) === true) {
+        if ($ip == '') {
             throw new Services_ProjectHoneyPot_Exception(
                 'Please supply an IP-address.',
                 self::ERR_NO_IP
@@ -231,7 +231,7 @@ class Services_ProjectHoneyPot
             $ip = $resp->answer[0]->address;
         }
 
-        if (is_null($this->accesskey) === true) {
+        if ($this->accesskey === null) {
             throw new Services_ProjectHoneyPot_Exception(
                 'No accesskey set.',
                 self::ERR_NO_KEY
