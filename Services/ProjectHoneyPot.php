@@ -79,41 +79,42 @@ class Services_ProjectHoneyPot
     const ERR_USER         = 672;
 
     /**
-     * @var string $accesskey
-     * @see Services_ProjectHoneyPot::factory()
-     * @see Services_ProjectHoneyPot::setAccesskey()
+     * @var  string $accesskey Your API access key.
+     * @see  Services_ProjectHoneyPot::factory()
+     * @see  Services_ProjectHoneyPot::setAccesskey()
+     * @link http://www.projecthoneypot.org/httpbl_configure.php
      */
     protected $accesskey;
 
     /**
-     * @var string
+     * @var string The name of the dnsbl (provided by Project HoneyPot).
      * @see Services_ProjectHoneyPot::setDnsBlacklist
      */
     protected $dns_blacklist = 'dnsbl.httpbl.org';
 
     /**
-     * @var object $resolver
+     * @var object $resolver A Net_DNS object.
      * @see Services_ProjectHoneyPot::factory
      * @see Services_ProjectHoneyPot::query
      */
     protected $resolver;
 
     /**
-     * @var bool $debug
+     * @var bool $debug Yes (true) or no (false)?
      * @see Services_ProjectHoneyPot::factory
      * @see Services_ProjectHoneyPot::parseResponse
      */
     protected $debug = false;
 
     /**
-     * @var string
+     * @var string Not yet used.
      * @see Services_ProjectHoneyPot::setHoneypot
      * @see Services_ProjectHoneyPot::getHoneypot
      */
     protected $honeypot;
     
     /**
-     * @var string
+     * @var string Return an array or an object in the end?
      */
     protected $responseFormat = 'array'; // object
 
@@ -284,9 +285,12 @@ class Services_ProjectHoneyPot
     /**
      * Parses the response object into a 'readable' format
      *
+     * For a more detailed response description, please see
+     * {@see Services_ProjectHoneyPot_Response::parse()}
+     *
      * @param object $respObj Whatever we received from the API.
      * 
-     * @return array
+     * @return array|Services_ProjectHoneyPot_Response_Result
      * @link   http://projecthoneypot.org/httpbl_api.php
      * @see    self::query()
      * @throws Services_ProjectHoneyPot_Exception

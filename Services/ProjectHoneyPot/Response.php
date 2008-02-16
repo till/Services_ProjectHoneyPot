@@ -54,6 +54,9 @@ require_once 'Services/ProjectHoneyPot/Exception.php';
  */
 class Services_ProjectHoneyPot_Response
 {
+    /**
+     * HR representations to match the int type returned from the API
+     */
     const RESPONSE_HR_SEARCHENGINE   = 'Search Engine';
     const RESPONSE_HR_SUSPICIOUS     = 'Suspicious';
     const RESPONSE_HR_HARVESTER      = 'Harvester';
@@ -61,11 +64,27 @@ class Services_ProjectHoneyPot_Response
     
     /**
      * Parse the response into an array or object.
-     * 
+     *
+     * It will look like the following, the object response follows the same
+     * pattern (and an example is therefor omitted):
+     * <ul>
+     *   <li>$response['suspicious'] -> Is the host/ip suspicious?</li>
+     *   <li>$response['harvester'] -> Is the host/ip a known harvester?</li>
+     *   <li>$response['comment_spammer'] -> Is this a known comment spammer?</li>
+     *   <li>$response['search_engine'] -> Is this a search engine?</li>
+     *   <li>$response['debug'] -> The entire response for debugging purposes.</li>
+     *   <li>$response['last_activity'] -> The last known recorded activity.</li>
+     *   <li>$response['score'] -> A score allocated by ProjectHoneyPot.</li>
+     *   <li>$response['type'] -> The type (from ProjectHoneyPot) of host.</li>
+     *   <li>$response['type_hr'] -> Human-readable equivalent of 'type'.</li>
+     * </ul>
+     *
      * @param SimpleXML $respObj The response.
      * @param String    $format  Do we return an array or object?
+     * @param boolean   $debug   Include entire response from API or not?
      *
      * @return mixed
+     * @see    Services_ProjectHoneyPot_Result
      */
     static function parse($respObj, $format = 'array', $debug = false)
     {
@@ -149,7 +168,7 @@ class Services_ProjectHoneyPot_Response
                 break;
     
             default:
-                throw new Services_ProjectHoneyPot_Exception(
+                throw new Services_ProjectHoneyPot_Response_Exception(
                     'Unknown type ' . $type . ' in response. API changes?',
                     self::ERR_UNKNOWN_API
                 );
@@ -161,8 +180,17 @@ class Services_ProjectHoneyPot_Response
             $response['type_hr']       = $type_hr;
         
         } elseif ($format == 'object') {
+
+            /* Services_ProjectHoneyPot_Result */
+            include_once 'Services/ProjectHoneyPot/Response/Result.php';
+            if (!class_exists('Services_ProjectHoneyPot_Response_Result')) {
+                throw new Services_ProjectHoneyPot_Response_Exception(
+                    'Unable to load file: Result.php'
+                    Services_ProjectHoneyPot::ERR_INTERNAL);
+            }
             
-            $response                  = new stdClass();
+            $response = new Services_ProjectHoneyPot_Response_Result;
+
             $response->suspicious      = null;
             $response->harvester       = null;
             $response->comment_spammer = null;
@@ -236,7 +264,7 @@ class Services_ProjectHoneyPot_Response
                 break;
     
             default:
-                throw new Services_ProjectHoneyPot_Exception(
+                throw new Services_ProjectHoneyPot_Response_Exception(
                     'Unknown type ' . $type . ' in response. API changes?',
                     self::ERR_UNKNOWN_API
                 );
