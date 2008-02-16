@@ -49,20 +49,24 @@
  */
 class Services_ProjectHoneyPot_Response_Result
 {
-    private $_store = array('suspicious' = false,
-        'harvester' => false,
-        'comment_spammer' => false,
-        'search_engine' => false,
-        'last_activity' => null,
-        'score' => null,
-        'type' => null,
-        'type_hr' => null);
+    private $_store = null;
 
     /**
      * __construct
      */
-    private __construct()
+    public function __construct()
     {
+        // set defaults
+        $this->_store = array(
+            'suspicious' => false,
+            'harvester' => false,
+            'comment_spammer' => false,
+            'search_engine' => false,
+            'last_activity' => null,
+            'score' => null,
+            'type' => null,
+            'type_hr' => null,
+            'debug' => null);
     }
 
     /**
@@ -76,10 +80,13 @@ class Services_ProjectHoneyPot_Response_Result
      */
     public function __set($name, $value)
     {
-        if (isset($this->_store[$name])) {
-            return $this->_store[$name] = $value;
-        }
-        return null;
+        return $this->_store[$name] = $value;
+
+        /* throw new Services_ProjectHoneyPot_Response_Exception(
+            "Unknow property '{$name}' requested (value: "
+            . var_export($value, true) . ', '
+            . var_export(isset($this->_store[$name]), true) . ')');
+        */
     }
 
     /**

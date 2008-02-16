@@ -38,7 +38,7 @@
 /**
  * Services_ProjectHoneyPot_Exception
  */
-require_once 'Services/ProjectHoneyPot/Exception.php';
+require_once 'Services/ProjectHoneyPot/Response/Exception.php';
 
 /**
  * A class to parse the response from ProjectHoneyPot.org
@@ -185,7 +185,7 @@ class Services_ProjectHoneyPot_Response
             include_once 'Services/ProjectHoneyPot/Response/Result.php';
             if (!class_exists('Services_ProjectHoneyPot_Response_Result')) {
                 throw new Services_ProjectHoneyPot_Response_Exception(
-                    'Unable to load file: Result.php'
+                    'Unable to load file: Result.php',
                     Services_ProjectHoneyPot::ERR_INTERNAL);
             }
             
