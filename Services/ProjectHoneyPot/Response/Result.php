@@ -46,6 +46,21 @@
  * @link     http://code.google.com/p/services-projecthoneypot/
  * @uses     Net_CheckIP2
  * @uses     Net_DNS
+ * @property boolean $suspicious Is the IP suspicious?
+ * @property boolean $harvester  Is the IP a known harvester?
+ * @property boolean $comment_spammer Is the IP a known comment spammer?
+ * @property boolean $search_engine Is the IP a search engine? If this is true, the
+ *                                  others ($suspicious, $harvester,
+ *                                  $comment_spammer) are false.
+ * @property mixed $last_activity Last known activity of the IP - the number of days
+ *                                from 0 to 255.
+ * @property int $score The thread score of this IP. The range of the score is from 0
+ *                      to 255. 255 means the IP is extremely threatening and 0
+ *                      indicates that no threat score has been assigned.
+ * @property int $type Indicates the type of the IP (0, 1, 2, 4) - $suspicious,
+ *                     $harvester, $comment_spammer or $search_engine.
+ * @property string $type_hr A HR representation of $type.
+ * @property mixed $debug Yes, no, maybe so?! ;)
  */
 class Services_ProjectHoneyPot_Response_Result
 {
@@ -81,12 +96,6 @@ class Services_ProjectHoneyPot_Response_Result
     public function __set($name, $value)
     {
         return $this->_store[$name] = $value;
-
-        /* throw new Services_ProjectHoneyPot_Response_Exception(
-            "Unknow property '{$name}' requested (value: "
-            . var_export($value, true) . ', '
-            . var_export(isset($this->_store[$name]), true) . ')');
-        */
     }
 
     /**
