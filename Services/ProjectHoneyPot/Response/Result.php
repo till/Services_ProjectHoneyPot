@@ -64,10 +64,18 @@
  */
 class Services_ProjectHoneyPot_Response_Result
 {
-    private $_store = null;
+    /**
+     * @var mixed $_store 
+     * @see self::__construct()
+     */
+    private $_store;
 
     /**
      * __construct
+     *
+     * Sets the defaults for the result.
+     *
+     * @uses self::$_store
      */
     public function __construct()
     {
