@@ -202,5 +202,10 @@ class Services_ProjectHoneyPot_Response_Result
         return array('type' => $this->_store['type'],
             $this->_store['type_hr']);
     }
+
+    public function toArray()
+    {
+        return $this->_store;
+    }
 }
 ?>
