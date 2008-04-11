@@ -178,7 +178,6 @@ class Services_ProjectHoneyPot
                     $this->resolver->getCode()
                 );
             }
-            $this->resolver->nameservers = array('66.114.197.251');
         } elseif ($resolver instanceof Net_DNS_Resolver) {
             $this->resolver = $resolver;
         } else {
