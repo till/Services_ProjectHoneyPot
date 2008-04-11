@@ -36,6 +36,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
        <file name="Array.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
+       <file name="String.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
       </dir>
       <file name="Exception.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
