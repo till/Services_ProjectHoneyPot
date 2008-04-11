@@ -13,11 +13,11 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>till@php.net</email>
   <active>yes</active>
  </lead>
- <date>2008-04-11</date>
- <time>20:00:00</time>
+ <date>2008-04-12</date>
+ <time>00:15:00</time>
  <version>
-  <release>0.5.1</release>
-  <api>0.5.1</api>
+  <release>0.5.2</release>
+  <api>0.5.2</api>
  </version>
  <stability>
   <release>alpha</release>
@@ -25,21 +25,17 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
  <notes>
-* small bugfixes
+* fixed format "array" and "string" (bugs introduced in 0.5.0)
+* removed classes for "array" and "string"
+* migrated leftover methods into Services_ProjectHoneyPot_Response_Result
+* added an example to show usage of custom Net_DNS_Resolver
+* cleaned up standard example file
  </notes>
  <contents>
   <dir name="/">
    <dir name="Services">
     <dir name="ProjectHoneyPot">
      <dir name="Response">
-      <dir name="Result">
-       <file name="Array.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="String.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir>
       <file name="Exception.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
@@ -94,6 +90,25 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>0.5.2</release>
+    <api>0.5.2</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2008-04-12</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
+   <notes>
+* fixed format "array" and "string" (bugs introduced in 0.5.0)
+* removed classes for "array" and "string"
+* migrated leftover methods into Services_ProjectHoneyPot_Response_Result
+* added an example to show usage of custom Net_DNS_Resolver
+* cleaned up standard example file
+   </notes>
+  </release>
   <release>
    <version>
     <release>0.5.1</release>
