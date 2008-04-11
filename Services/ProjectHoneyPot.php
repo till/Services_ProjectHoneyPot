@@ -79,6 +79,11 @@ class Services_ProjectHoneyPot
     const ERR_USER         = 672;
 
     /**
+     * @var $responseFormats array
+     */
+    static public $responseFormats = array('array', 'object');
+
+    /**
      * @var  string $accesskey Your API access key.
      * @see  Services_ProjectHoneyPot::factory()
      * @see  Services_ProjectHoneyPot::setAccesskey()
@@ -131,6 +136,7 @@ class Services_ProjectHoneyPot
      * Initialize the class.
      *
      * @param string $accesskey The accesskey provided by Project HoneyPot.
+     * @param mixed  $resolver  'null' or Net_DNS_Resolver.
      * @param bool   $debug     Enable debug, or maybe not? :-)
      * 
      * @return Services_ProjectHoneyPot
@@ -139,23 +145,47 @@ class Services_ProjectHoneyPot
      * @uses   Services_ProjectHoneyPot::$debug
      * @uses   Net_DNS_Resolver
      */
-    static function factory($accesskey = null, $debug = null)
+    static function factory($accesskey = null, $resolver = null, $debug = null)
     {
         $cls = new Services_ProjectHoneyPot;
         if (is_null($accesskey) === false) {
             $cls->accesskey = $accesskey;
         }
-        $cls->resolver = new Net_DNS_Resolver;
-        if (PEAR::isError($cls->resolver)) {
-            throw new Services_ProjectHoneyPot_Exception(
-                $cls->resolver->getMessage(),
-                $cls->resolver->getCode()
-            );
-        }
+        $cls->setResolver($resolver);
         if ($debug !== null && is_bool($debug) === true) {
             $cls->debug = $debug;
         }
         return $cls;
+    }
+
+    /**
+     * Set, or create a NET_DNS_Resolver for internal use.
+     *
+     * @param mixed $resolver 'null' or Net_DNS_Resolver
+     *
+     * @uses   self::$resolver
+     * @return void
+     * @throws Services_ProjectHoneyPot_Exception In case of a wrong object or an
+     *                                            error on init.
+     */
+    public function setResolver($resolver = null)
+    {
+        if ($resolver === null) {
+            $this->resolver = new Net_DNS_Resolver;
+            if (PEAR::isError($this->resolver)) {
+                throw new Services_ProjectHoneyPot_Exception(
+                    $this->resolver->getMessage(),
+                    $this->resolver->getCode()
+                );
+            }
+        } elseif ($resolver instanceof Net_DNS_Resolver) {
+            $this->resolver = $resolver;
+        } else {
+            throw new Services_ProjectHoneyPot_Exception(
+                'Unknown class of type: ' . get_class($resolver),
+                self::ERR_USER
+            );
+        }
     }
     
     /**
@@ -168,7 +198,7 @@ class Services_ProjectHoneyPot
      */
     public function setResponseFormat($format)
     {
-        if (!in_array($format, array('array', 'object'))) {
+        if (!in_array($format, self::$responseFormats)) {
             throw new Services_ProjectHoneyPot_Exception(
                 'Unknown or unsupported format: ' . $format,
                 self::ERR_USER
