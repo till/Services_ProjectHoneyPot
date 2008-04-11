@@ -207,5 +207,14 @@ class Services_ProjectHoneyPot_Response_Result
     {
         return $this->_store;
     }
+
+    public function __toString()
+    {
+        $_str = '';   
+        foreach ($_store AS $k=>$v) {
+            $_str .= "$k: $value\n";
+        }
+        return $_str;
+    }
 }
 ?>
