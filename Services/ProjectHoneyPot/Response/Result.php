@@ -203,11 +203,23 @@ class Services_ProjectHoneyPot_Response_Result
             $this->_store['type_hr']);
     }
 
+    /**
+     * Just returns an array.
+     *
+     * @uses self::$_store
+     * @return array
+     */
     public function toArray()
     {
         return $this->_store;
     }
 
+    /**
+     * Returns a string.
+     *
+     * @uses self::$_store
+     * @return string
+     */
     public function __toString()
     {
         $_str = '';   

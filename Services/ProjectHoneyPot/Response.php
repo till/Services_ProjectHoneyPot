@@ -99,30 +99,14 @@ class Services_ProjectHoneyPot_Response
             );
         }
 
-        if ($format != 'object') {
-
-            $_class  = 'Services_ProjectHoneyPot_Response_Result_';
-            $_class .= ucwords($format);
-            include_once str_replace('_', '/', $_class) . '.php';
-            if (!class_exists($_class)) {
-                throw new Services_ProjectHoneyPot_Response_Exception(
-                    'Unable to load class: ' . $_class,
-                    Services_ProjectHoneyPot::ERR_INTERNAL);
-            }
-            $response = new $_class;
-
-        } else {
-
-            /* Services_ProjectHoneyPot_Result */
-            include_once 'Services/ProjectHoneyPot/Response/Result.php';
-            if (!class_exists('Services_ProjectHoneyPot_Response_Result')) {
-                throw new Services_ProjectHoneyPot_Response_Exception(
-                    'Unable to load file: Result.php',
-                    Services_ProjectHoneyPot::ERR_INTERNAL);
-            }
-            $response = new Services_ProjectHoneyPot_Response_Result;
-
+        /* Services_ProjectHoneyPot_Result */
+        include_once 'Services/ProjectHoneyPot/Response/Result.php';
+        if (!class_exists('Services_ProjectHoneyPot_Response_Result')) {
+            throw new Services_ProjectHoneyPot_Response_Exception(
+               'Unable to load file: Result.php',
+               Services_ProjectHoneyPot::ERR_INTERNAL);
         }
+        $response = new Services_ProjectHoneyPot_Response_Result;
 
         $response->suspicious      = null;
         $response->harvester       = null;
@@ -209,8 +193,12 @@ class Services_ProjectHoneyPot_Response
         $response->type_hr       = $type_hr;
 
         if ($format != 'object') {
-            $_method = 'to' . ucwords($format) . '()';
-            return $response->$_method;
+            switch ($format) {
+            case 'array':
+                return $response->toArray();
+            case 'string':
+                return (string) $response;
+            }
         }
         return $response;
     }
