@@ -62,6 +62,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <file name="config.php-dist" role="doc" />
     <file name="example.php" role="doc" />
     <file name="example-obj.php" role="doc" />
+    <file name="example-resolver.php" role="doc" />
    </dir>
    <dir name="tests" baseinstalldir="Services_ProjectHoneyPot">
     <file name="config.php-dist" role="test" />
