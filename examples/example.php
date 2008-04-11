@@ -37,7 +37,4 @@ if ($status === false)
 
 echo '<pre>'; var_dump($status); echo '</pre>';
 
-if (is_null($status['search_engine']) === true) {
-    echo $sphp->getHoneyPot();
-}
 ?>
