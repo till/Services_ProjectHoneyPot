@@ -148,7 +148,7 @@ class Services_ProjectHoneyPot
     static function factory($accesskey = null, $resolver = null, $debug = null)
     {
         $cls = new Services_ProjectHoneyPot;
-        if (is_null($accesskey) === false) {
+        if ($accesskey !== null) {
             $cls->accesskey = $accesskey;
         }
         $cls->setResolver($resolver);
