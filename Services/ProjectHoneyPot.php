@@ -54,6 +54,11 @@ require_once 'Services/ProjectHoneyPot/Exception.php';
 require_once 'Services/ProjectHoneyPot/Response.php';
 
 /**
+ * Services_ProjectHoneyPot_Response_ResultSet
+ */
+require_once 'Services/ProjectHoneyPot/Response/ResultSet.php';
+
+/**
  * A class to interface services provided by ProjectHoneyPot.org
  *
  * @category Services
@@ -237,10 +242,10 @@ class Services_ProjectHoneyPot
     /**
      * Checks if the supplied IP is listed.
      * 
-     * @param string $ip IP or hostname. Using an IP is more "expensive" because
-     *                   we will need to resolve it.
+     * @param string|array $ip IP or hostname. Using an IP is more "expensive"
+     *                     because we will need to resolve it.
      * 
-     * @return array
+     * @return Services_ProjectHoneyPot_Response_ResultSet
      * @uses   Services_ProjectHoneyPot::getHostForLookup
      * @uses   Services_ProjectHoneyPot::parseResponse
      * @uses   Services_ProjectHoneyPot::$resolver
@@ -250,48 +255,69 @@ class Services_ProjectHoneyPot
      */
     public function query($ip = '')
     {
-        if ($ip == '') {
-            throw new Services_ProjectHoneyPot_Exception(
-                'Please supply an IP-address.',
-                self::ERR_NO_IP
-            );
-        }
-        if (Net_CheckIP2::check_ip($ip) !== true) {
-            $resp = $this->resolver->query($ip);
-            if (isset($resp->answer[0]->address) === false) {
-                throw new Services_ProjectHoneyPot_Exception(
-                    'Unable to resolve host.',
-                    self::ERR_NO_IP
-                );
-            }
-            $ip = $resp->answer[0]->address;
-        }
-
         if ($this->accesskey === null) {
             throw new Services_ProjectHoneyPot_Exception(
                 'No accesskey set.',
                 self::ERR_NO_KEY
             );
         }
-        $ip = $this->getHostForLookup($ip);
+        if ($ip == '') {
+            throw new Services_ProjectHoneyPot_Exception(
+                'Please supply an IP-address.',
+                self::ERR_NO_IP
+            );
+        }
+        if (is_string($ip)) {
+            $ips = array($ip);
+        } else {
+            $ips = $ip;
+        }
+        if (count($ips) == 0) {
+            throw new Services_ProjectHoneyPot_Exception(
+                'Please supply an IP-address.',
+                self::ERR_NO_IP
+            );
+        }
 
-        $response = $this->resolver->query($ip);
-        if ($response === false) {
-            return $response;
+        var_dump($ips);
+
+        $data = array();
+        foreach ($ips AS $ip) {
+            if (isset($data[$ip])) {
+                continue;
+            }
+            if (Net_CheckIP2::check_ip($ip) !== true) {
+                $resp = $this->resolver->query($ip);
+                if (isset($resp->answer[0]->address) === false) {
+                    throw new Services_ProjectHoneyPot_Exception(
+                        'Unable to resolve host.',
+                         self::ERR_NO_IP
+                    );
+                }
+                $ip = $resp->answer[0]->address;
+            }
+
+            $host = $this->getHostForLookup($ip);
+            $response = $this->resolver->query($host);
+            if ($response === false) {
+                $data[$ip] = $response;
+                continue;
+            }
+            if (is_object($response) === false) {
+                throw new Services_ProjectHoneyPot_Exception(
+                    'Unknown response.',
+                    self::ERR_UNKNOWN_RESP
+                );
+            }
+            if (isset($response->answer[0]->address) === false) {
+                throw new Services_ProjectHoneyPot_Exception(
+                    'Unknown response object. API changes?',
+                    self::ERR_UNKNOWN_API
+                );
+            }
+            $data[$ip] = $this->parseResponse($response);
         }
-        if (is_object($response) === false) {
-            throw new Services_ProjectHoneyPot_Exception(
-                'Unknown response.',
-                self::ERR_UNKNOWN_RESP
-            );
-        }
-        if (isset($response->answer[0]->address) === false) {
-            throw new Services_ProjectHoneyPot_Exception(
-                'Unknown response object. API changes?',
-                self::ERR_UNKNOWN_API
-            );
-        }
-        return $this->parseResponse($response);
+        return new Services_ProjectHoneyPot_Response_ResultSet($data);
     }
 
     /**

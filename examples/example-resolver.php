@@ -36,14 +36,19 @@ catch (Services_ProjectHoneyPot_Exception $e) {
     echo "\nCODE: " . $e->getCode();
     exit;
 }
-if ($status === false)
-{
-    echo 'Don\'t bother. Probably a regular user. ;-)';
-    exit;
+
+if ($status->count() == 0) {
+    die("No results.");
+}
+foreach ($status->fetch() AS $res) {
+    if ($res === false) {
+        echo 'Don\'t bother. Probably a regular user. ;-)' . "\n";
+    } else {
+        if ($res->isHarvester()) {
+            echo '<h1>OMG, a harvester!!!</h1>';
+            echo '<pre>'; var_dump($res); echo '</pre>';
+        }
+    }
 }
 
-if ($status->isHarvester()) {
-    echo '<h1>OMG, a harvester!!!</h1>';
-    echo '<pre>'; var_dump($status->getAll()); echo '</pre>';
-}
 ?>

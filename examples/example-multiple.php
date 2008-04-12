@@ -15,13 +15,16 @@ include dirname(__FILE__) . '/config.php';
 
 try {
     $sphp = Services_ProjectHoneyPot::factory($access_key);
+    $sphp->setResponseFormat('object');
 
     //$ip = $_SERVER['REMOTE_ADDR'];
     //$ip = '24.132.194.14';
     //$ip = '62.75.159.212';
     //$ip = 'heise.de';
 
-    $status = $sphp->query($harvester);
+    $ips = array('24.132.194.14', '62.75.159.212', 'heise.de', '81.169.145.28');
+
+    $status = $sphp->query($ips);
 
 }
 catch (Services_ProjectHoneyPot_Exception $e) {
@@ -29,15 +32,20 @@ catch (Services_ProjectHoneyPot_Exception $e) {
     echo '<br />CODE: ' . $e->getCode();
     exit;
 }
-
 if ($status->count() == 0) {
     die("No results.");
 }
+
+echo "<h1>" . $status->count() . "</h1>";
+
 foreach ($status->fetch() AS $res) {
     if ($res === false) {
         echo 'Don\'t bother. Probably a regular user. ;-)' . "\n";
     } else {
-        echo '<pre>'; var_dump($res); echo '</pre>';
+        if ($res->isHarvester()) {
+            echo '<h1>OMG, a harvester!!!</h1>';
+            echo '<pre>'; var_dump($res); echo '</pre>';
+        }
     }
 }
 ?>
