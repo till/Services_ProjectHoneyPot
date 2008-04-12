@@ -279,8 +279,6 @@ class Services_ProjectHoneyPot
             );
         }
 
-        var_dump($ips);
-
         $data = array();
         foreach ($ips AS $ip) {
             if (isset($data[$ip])) {
