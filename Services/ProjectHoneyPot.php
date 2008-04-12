@@ -269,8 +269,13 @@ class Services_ProjectHoneyPot
         }
         if (is_string($ip)) {
             $ips = array($ip);
-        } else {
+        } elseif (is_array($ip)) {
             $ips = $ip;
+        } else {
+            throw new Services_ProjectHoneyPot_Exception(
+                'Please supply a string or an array of IPs.',
+                self::ERR_USER
+            );
         }
         if (count($ips) == 0) {
             throw new Services_ProjectHoneyPot_Exception(
