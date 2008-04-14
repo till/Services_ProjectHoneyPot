@@ -90,7 +90,7 @@ class Services_ProjectHoneyPot
 
     /**
      * @var  string $accesskey Your API access key.
-     * @see  Services_ProjectHoneyPot::factory()
+     * @see  Services_ProjectHoneyPot::__construct()
      * @see  Services_ProjectHoneyPot::setAccesskey()
      * @link http://www.projecthoneypot.org/httpbl_configure.php
      */
@@ -104,15 +104,15 @@ class Services_ProjectHoneyPot
 
     /**
      * @var object $resolver A Net_DNS object.
-     * @see Services_ProjectHoneyPot::factory
-     * @see Services_ProjectHoneyPot::query
+     * @see Services_ProjectHoneyPot::__construct()
+     * @see Services_ProjectHoneyPot::query()
      */
     protected $resolver;
 
     /**
      * @var bool $debug Yes (true) or no (false)?
-     * @see Services_ProjectHoneyPot::factory
-     * @see Services_ProjectHoneyPot::parseResponse
+     * @see Services_ProjectHoneyPot::__construct()
+     * @see Services_ProjectHoneyPot::parseResponse()
      */
     protected $debug = false;
 
@@ -129,15 +129,6 @@ class Services_ProjectHoneyPot
     protected $responseFormat = 'array'; // object
 
     /**
-     * Enforce using Services_ProjectHoneyPot::factory().
-     * 
-     * @see self::factory()
-     */
-    private function __construct()
-    {
-    }
-
-    /**
      * Initialize the class.
      *
      * @param string $accesskey The accesskey provided by Project HoneyPot.
@@ -150,17 +141,15 @@ class Services_ProjectHoneyPot
      * @uses   Services_ProjectHoneyPot::$debug
      * @uses   Net_DNS_Resolver
      */
-    static function factory($accesskey = null, $resolver = null, $debug = null)
+    public function __construct($accesskey = null, $resolver = null, $debug = null)
     {
-        $cls = new Services_ProjectHoneyPot;
         if ($accesskey !== null) {
-            $cls->accesskey = $accesskey;
+            $this->accesskey = $accesskey;
         }
-        $cls->setResolver($resolver);
+        $this->setResolver($resolver);
         if ($debug !== null && is_bool($debug) === true) {
-            $cls->debug = $debug;
+            $this->debug = $debug;
         }
-        return $cls;
     }
 
     /**
@@ -303,7 +292,7 @@ class Services_ProjectHoneyPot
             $host = $this->getHostForLookup($ip);
             $response = $this->resolver->query($host);
             if ($response === false) {
-                $data[$ip] = $response;
+                array_push($data, array($ip => $response));
                 continue;
             }
             if (is_object($response) === false) {
@@ -318,7 +307,7 @@ class Services_ProjectHoneyPot
                     self::ERR_UNKNOWN_API
                 );
             }
-            $data[$ip] = $this->parseResponse($response);
+            array_push($data, array($ip => $this->parseResponse($response)));
         }
         return new Services_ProjectHoneyPot_Response_ResultSet($data);
     }

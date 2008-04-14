@@ -25,7 +25,7 @@ try {
      * :-)
      */
 
-    $sphp = Services_ProjectHoneyPot::factory($access_key, $resolver);
+    $sphp = new Services_ProjectHoneyPot($access_key, $resolver);
     $sphp->setResponseFormat('object');
 
     $status = $sphp->query($harvester);
@@ -37,10 +37,14 @@ catch (Services_ProjectHoneyPot_Exception $e) {
     exit;
 }
 
-if ($status->count() == 0) {
+if (count($status) == 0) {
     die("No results.");
 }
-foreach ($status->fetch() AS $res) {
+foreach ($status as $res) {
+
+    $ip  = key($res);
+    $res = $res[$ip];
+
     if ($res === false) {
         echo 'Don\'t bother. Probably a regular user. ;-)' . "\n";
     } else {

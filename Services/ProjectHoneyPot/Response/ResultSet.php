@@ -47,25 +47,50 @@
  * @see      Services_ProjectHoneyPot_Response_Result
  * @see      Services_ProjectHoneyPot::query()
  */
-class Services_ProjectHoneyPot_Response_ResultSet
+class Services_ProjectHoneyPot_Response_ResultSet implements Iterator, Countable
 {
     private $_data;
-    private $_count;
+
+    private $key;
 
     public function __construct($data)
     {
         $this->_data  = $data;
-        $this->_count = count($data);
     }
 
+    /**
+     * @return int
+     * @uses   self::$_count
+     * @see    Countable
+     */
     public function count()
     {
-        return $this->_count;
+        return count($this->_data);
     }
 
-    public function fetch()
+    public function current()
     {
-        return $this->_data;
+        return current($this->_data);
+    }
+
+    public function key()
+    {
+        return key($this->_data);
+    }
+
+    public function next()
+    {
+        next($this->_data);
+    }
+
+    public function rewind()
+    {
+        reset($this->_data);
+    }
+
+    public function valid()
+    {
+        return (current($this->_data) !== FALSE);
     }
 }
 ?>

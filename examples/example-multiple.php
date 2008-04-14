@@ -14,7 +14,7 @@ require_once 'Services/ProjectHoneyPot.php';
 include dirname(__FILE__) . '/config.php';
 
 try {
-    $sphp = Services_ProjectHoneyPot::factory($access_key);
+    $sphp = new Services_ProjectHoneyPot($access_key);
     $sphp->setResponseFormat('object');
 
     //$ip = $_SERVER['REMOTE_ADDR'];
@@ -32,13 +32,18 @@ catch (Services_ProjectHoneyPot_Exception $e) {
     echo '<br />CODE: ' . $e->getCode();
     exit;
 }
-if ($status->count() == 0) {
+if (count($status) == 0) {
     die("No results.");
 }
 
-echo "<h1>" . $status->count() . "</h1>";
+echo "<h1>COUNT: " . count($status) . "</h1>";
 
-foreach ($status->fetch() AS $res) {
+var_dump($status);
+
+foreach ($status AS $res) {
+    $ip  = key($res);
+    $res = $res[$ip];
+
     if ($res === false) {
         echo 'Don\'t bother. Probably a regular user. ;-)' . "\n";
     } else {
