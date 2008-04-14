@@ -42,6 +42,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
       <file name="Result.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
+      <file name="ResultSet.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
      </dir>
      <file name="Exception.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -86,6 +89,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <channel>pear.php.net</channel>
     <min>1.0.0</min>
    </package>
+   <extension>
+    <name>spl</name>
+   </extension>
   </required>
  </dependencies>
  <phprelease />
