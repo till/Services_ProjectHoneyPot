@@ -51,8 +51,6 @@ class Services_ProjectHoneyPot_Response_ResultSet implements Iterator, Countable
 {
     private $_data;
 
-    private $key;
-
     public function __construct($data)
     {
         $this->_data  = $data;
