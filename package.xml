@@ -13,10 +13,10 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>till@php.net</email>
   <active>yes</active>
  </lead>
- <date>2008-04-12</date>
- <time>00:15:00</time>
+ <date>2011-01-13</date>
+ <time>10:50:00</time>
  <version>
-  <release>0.5.2</release>
+  <release>0.5.3</release>
   <api>0.5.2</api>
  </version>
  <stability>
@@ -25,11 +25,8 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
  <notes>
-* fixed format "array" and "string" (bugs introduced in 0.5.0)
-* removed classes for "array" and "string"
-* migrated leftover methods into Services_ProjectHoneyPot_Response_Result
-* added an example to show usage of custom Net_DNS_Resolver
-* cleaned up standard example file
+* bugfix: Net_CheckIP2 changed API so we had to update
+* bump up Net_CheckIP2 version requirement
  </notes>
  <contents>
   <dir name="/">
@@ -83,7 +80,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <package>
     <name>Net_CheckIP2</name>
     <channel>pear.php.net</channel>
-    <min>1.0.0RC2</min>
+    <min>1.0.0RC3</min>
    </package>
    <package>
     <name>Net_DNS</name>
@@ -97,6 +94,22 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>0.5.3</release>
+    <api>0.5.2</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2010-01-13</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
+   <notes>
+* bugfix: Net_CheckIP2 changed API so we had to update
+* bump up Net_CheckIP2 version requirement
+   </notes>
+  </release>
   <release>
    <version>
     <release>0.5.2</release>
