@@ -278,7 +278,7 @@ class Services_ProjectHoneyPot
             if (isset($data[$ip])) {
                 continue;
             }
-            if (Net_CheckIP2::check_ip($ip) !== true) {
+            if (Net_CheckIP2::isValid($ip) !== true) {
                 $resp = $this->resolver->query($ip);
                 if (isset($resp->answer[0]->address) === false) {
                     throw new Services_ProjectHoneyPot_Exception(
