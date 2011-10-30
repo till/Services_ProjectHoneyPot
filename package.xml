@@ -63,6 +63,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    </dir>
    <dir name="tests" baseinstalldir="Services_ProjectHoneyPot">
     <file name="config.php-dist" role="test" />
+    <file name="skip.inc" role="test" />
     <file name="test-harvester.phpt" role="test" />
     <file name="test-valid.phpt" role="test" />
     <file name="test-valid-host.phpt" role="test" />
@@ -75,7 +76,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <min>5.2.0</min>
    </php>
    <pearinstaller>
-    <min>1.4.0b1</min>
+    <min>1.9.0</min>
    </pearinstaller>
    <package>
     <name>Net_CheckIP2</name>
@@ -83,9 +84,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <min>1.0.0RC3</min>
    </package>
    <package>
-    <name>Net_DNS</name>
+    <name>Net_DNS2</name>
     <channel>pear.php.net</channel>
-    <min>1.0.0</min>
+    <min>1.1.4</min>
    </package>
    <extension>
     <name>spl</name>
