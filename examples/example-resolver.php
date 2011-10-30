@@ -17,8 +17,9 @@ try {
     /**
      * Use a custom Net_DNS_Resolver with Services_ProjectHoneyPot
      */
-    $resolver = new Net_DNS_Resolver;
-    $resolver->nameservers = array('66.114.197.251');
+    $resolver = new Net_DNS2_Resolver(array(
+        'nameservers' => array('66.114.197.251',),
+    ));
 
     /**
      * 66.114.197.251 is a authorative NS for dnsbl.httpbl.org
@@ -55,4 +56,3 @@ foreach ($status as $res) {
     }
 }
 
-?>
