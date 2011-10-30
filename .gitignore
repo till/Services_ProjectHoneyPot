@@ -1,2 +1,7 @@
 tests/config.php
 *.tgz
+tests/*.diff
+tests/*.log
+tests/*.out
+tests/*.exp
+*run-tests.log
