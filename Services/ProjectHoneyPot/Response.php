@@ -61,7 +61,7 @@ class Services_ProjectHoneyPot_Response
     const RESPONSE_HR_SUSPICIOUS     = 'Suspicious';
     const RESPONSE_HR_HARVESTER      = 'Harvester';
     const RESPONSE_HR_COMMENTSPAMMER = 'Comment Spammer';
-    
+
     /**
      * Parse the response into an array or object.
      *
@@ -79,15 +79,16 @@ class Services_ProjectHoneyPot_Response
      *   <li>$response['type_hr'] -> Human-readable equivalent of 'type'.</li>
      * </ul>
      *
-     * @param SimpleXML $respObj The response.
-     * @param String    $format  Do we return an array or object?
-     * @param boolean   $debug   Include entire response from API or not?
+     * @param Net_DNS2_Packet_Response $respObj The response.
+     * @param String                   $format  Do we return an array or object?
+     * @param boolean                  $debug   Include entire response from API or not?
      *
      * @return mixed
      * @see    Services_ProjectHoneyPot_Result
      */
-    static function parse($respObj, $format = 'array', $debug = false)
-    {
+    static function parse(Net_DNS2_Packet_Response $respObj, $format = 'array',
+        $debug = false
+    ) {
         $ip = $respObj->answer[0]->address;
 
         list($foobar, $last_activity, $score, $type) = explode('.', $ip);
@@ -100,7 +101,7 @@ class Services_ProjectHoneyPot_Response
         }
 
         /* Services_ProjectHoneyPot_Result */
-        include_once 'Services/ProjectHoneyPot/Response/Result.php';
+        include_once dirname(__FILE__) . '/Response/Result.php';
         if (!class_exists('Services_ProjectHoneyPot_Response_Result')) {
             throw new Services_ProjectHoneyPot_Response_Exception(
                'Unable to load file: Result.php',
@@ -112,81 +113,83 @@ class Services_ProjectHoneyPot_Response
         $response->harvester       = null;
         $response->comment_spammer = null;
         $response->search_engine   = null;
-    
+
         if ($debug === true) {
             $response->debug = $respObj;
         } else {
             $response->debug = null;
         }
-    
+
         $type_hr = '';
         switch ($type) {
         case 0:
             $type_hr .= self::RESPONSE_HR_SEARCHENGINE;
-                
+
             $score         = null;
             $last_activity = null;
-                
+
             $response->seach_engine = 1;
             break;
-    
+
         case 1:
             $type_hr .= self::RESPONSE_HR_SUSPICIOUS;
-                
+
             $response->suspicious = 1;
             break;
-    
+
         case 2:
+            $response->harvester = 1;
+
             $type_hr .= self::RESPONSE_HR_HARVESTER;
             break;
-    
+
         case 3:
             $type_hr .= self::RESPONSE_HR_SUSPICIOUS . ' & ';
             $type_hr .= self::RESPONSE_HR_HARVESTER;
-                
+
             $response->suspicious = 1;
             $response->harvester  = 1;
             break;
-    
+
         case 4:
             $type_hr .= self::RESPONSE_HR_COMMENTSPAMMER;
-                
+
             $response->comment_spammer = 1;
             break;
-    
+
         case 5:
             $type_hr .= self::RESPONSE_HR_SUSPICIOUS . ' & ';
             $type_hr .= self::RESPONSE_HR_COMMENTSPAMMER;
-                
+
             $response->suspicious      = 1;
             $response->comment_spammer = 1;
             break;
-    
+
         case 6:
             $type_hr .= self::RESPONSE_HR_HARVESTER . ' & ';
             $type_hr .= self::RESPONSE_HR_COMMENTSPAMMER;
-                
+
             $response->harvester       = 1;
             $response->comment_spammer = 1;
             break;
-    
+
         case 7:
             $type_hr .= self::RESPONSE_HR_SUSPICIOUS . ' & ';
             $type_hr .= self::RESPONSE_HR_HARVESTER . ' & ';
             $type_hr .= self::RESPONSE_HR_COMMENTSPAMMER;
-                
+
             $response->suspicious      = 1;
             $response->harvester       = 1;
             $response->comment_spammer = 1;
             break;
-    
+
         default:
             throw new Services_ProjectHoneyPot_Response_Exception(
                 'Unknown type ' . $type . ' in response. API changes?',
                 self::ERR_UNKNOWN_API
             );
         }
-    
+
         $response->last_activity = $last_activity;
         $response->score         = $score;
         $response->type          = $type;
@@ -203,4 +206,3 @@ class Services_ProjectHoneyPot_Response
         return $response;
     }
 }
-?>
