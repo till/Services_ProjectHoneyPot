@@ -50,7 +50,7 @@ require_once 'Services/ProjectHoneyPot/Response/Exception.php';
  * @version  Release: @package_version@
  * @link     http://code.google.com/p/services-projecthoneypot/
  * @uses     Net_CheckIP2
- * @uses     Net_DNS
+ * @uses     Net_DNS2_Resolver
  */
 class Services_ProjectHoneyPot_Response
 {
