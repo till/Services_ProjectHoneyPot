@@ -2,35 +2,40 @@
 This is a known harvester!
 --SKIPIF--
 <?php
-require './skip.inc';
+require dirname(__FILE__) . '/skip.inc';
 --FILE--
 <?php
 set_include_path(dirname(__FILE__) . '/../' . PATH_SEPARATOR . get_include_path());
 require_once 'Services/ProjectHoneyPot.php';
 include dirname(__FILE__) . '/config.php';
-$sphp   = Services_ProjectHoneyPot::factory($access_key);
+$sphp   = new Services_ProjectHoneyPot($access_key);
 $ip     = $harvester;
-$status = $sphp->query($ip);
-var_dump($status);
+$result = $sphp->query($ip);
+
+var_dump(count($result));
+foreach ($result as $res) {
+    var_dump($res[$ip]);
+}
 ?>
 --EXPECT--
+int(1)
 array(9) {
   ["suspicious"]=>
-  int(1)
+  NULL
   ["harvester"]=>
   int(1)
   ["comment_spammer"]=>
   NULL
   ["search_engine"]=>
   NULL
+  ["last_activity"]=>
+  string(1) "1"
+  ["score"]=>
+  string(1) "1"
+  ["type"]=>
+  string(1) "2"
+  ["type_hr"]=>
+  string(9) "Harvester"
   ["debug"]=>
   NULL
-  ["last_activity"]=>
-  string(1) "2"
-  ["score"]=>
-  string(2) "50"
-  ["type"]=>
-  string(1) "3"
-  ["type_hr"]=>
-  string(22) "Suspicious & Harvester"
 }
