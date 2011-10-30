@@ -412,11 +412,12 @@ class Services_ProjectHoneyPot
      *
      * @return $this
      * @uses   Services_ProjectHoneyPot::$debug
+     * @throws InvalidArgumentException
      */
     public function setDebug($debug)
     {
         if (is_bool($debug) === false) {
-            return $this->debug;
+            throw new InvalidArgumentException("Debug flag must be a boolean.");
         }
         $this->debug = $debug;
         return $this;
