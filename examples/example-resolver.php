@@ -15,7 +15,7 @@ include dirname(__FILE__) . '/config.php';
 
 try {
     /**
-     * Use a custom Net_DNS_Resolver with Services_ProjectHoneyPot
+     * Use a custom Net_DNS2_Resolver with Services_ProjectHoneyPot
      */
     $resolver = new Net_DNS2_Resolver(array(
         'nameservers' => array('66.114.197.251',),
