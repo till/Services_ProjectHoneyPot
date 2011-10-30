@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2008, Till Klampaeckel
+ * Copyright (c) 2008-2011, Till Klampaeckel
  * 
  * All rights reserved.
  * 
