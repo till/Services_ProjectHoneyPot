@@ -1,18 +1,18 @@
 <?php
 /**
  * Copyright (c) 2007-2011, Till Klampaeckel
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
- * 
+ *
  *  * Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *  * Redistributions in binary form must reproduce the above copyright notice, this
  *    list of conditions and the following disclaimer in the documentation and/or
  *    other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,11 +36,10 @@
  */
 
 /**
- * Include PEAR, Net_DNS and Net_CheckIP2
+ * Net_DNS2 and Net_CheckIP2
  * @ignore
  */
-require_once 'PEAR.php';
-require_once 'Net/DNS.php';
+require_once 'Net/DNS2.php';
 require_once 'Net/CheckIP2.php';
 
 /**
@@ -68,7 +67,7 @@ require_once 'Services/ProjectHoneyPot/Response/ResultSet.php';
  * @version  Release: @package_version@
  * @link     http://code.google.com/p/services-projecthoneypot/
  * @uses     Net_CheckIP2
- * @uses     Net_DNS
+ * @uses     Net_DNS2
  */
 class Services_ProjectHoneyPot
 {
@@ -103,7 +102,7 @@ class Services_ProjectHoneyPot
     protected $dns_blacklist = 'dnsbl.httpbl.org';
 
     /**
-     * @var object $resolver A Net_DNS object.
+     * @var Net_DNS2_Resolver $resolver A Net_DNS2_Resolver object.
      * @see Services_ProjectHoneyPot::__construct()
      * @see Services_ProjectHoneyPot::query()
      */
@@ -122,7 +121,7 @@ class Services_ProjectHoneyPot
      * @see Services_ProjectHoneyPot::getHoneypot
      */
     protected $honeypot;
-    
+
     /**
      * @var string Return an array or an object in the end?
      */
@@ -132,62 +131,57 @@ class Services_ProjectHoneyPot
      * Initialize the class.
      *
      * @param string $accesskey The accesskey provided by Project HoneyPot.
-     * @param mixed  $resolver  'null' or Net_DNS_Resolver.
+     * @param mixed  $resolver  'null' or Net_DNS2_Resolver.
      * @param bool   $debug     Enable debug, or maybe not? :-)
-     * 
+     *
      * @return Services_ProjectHoneyPot
      * @throws Services_ProjectHoneyPot_Exception
      * @uses   Services_ProjectHoneyPot::$accesskey
      * @uses   Services_ProjectHoneyPot::$debug
-     * @uses   Net_DNS_Resolver
+     * @uses   Net_DNS2_Resolver
      */
-    public function __construct($accesskey = null, $resolver = null, $debug = null)
-    {
+    public function __construct(
+        $accesskey = null,
+        Net_DNS2_Resolver $resolver = null,
+        $debug = null
+    ) {
         if ($accesskey !== null) {
             $this->accesskey = $accesskey;
         }
+        if ($resolver === null) {
+            $resolver = new Net_DNS2_Resolver(array(
+                'use_tcp' => false,
+            ));
+        }
         $this->setResolver($resolver);
+
         if ($debug !== null && is_bool($debug) === true) {
             $this->debug = $debug;
         }
     }
 
     /**
-     * Set, or create a NET_DNS_Resolver for internal use.
+     * Set, or create a Net_DNS2_Resolver for internal use.
      *
      * @param mixed $resolver 'null' or Net_DNS_Resolver
      *
      * @uses   self::$resolver
-     * @return void
+     * @return $this
      * @throws Services_ProjectHoneyPot_Exception In case of a wrong object or an
      *                                            error on init.
      */
-    public function setResolver($resolver = null)
+    public function setResolver(Net_DNS2_Resolver $resolver = null)
     {
-        if ($resolver === null) {
-            $this->resolver = new Net_DNS_Resolver;
-            if (PEAR::isError($this->resolver)) {
-                throw new Services_ProjectHoneyPot_Exception(
-                    $this->resolver->getMessage(),
-                    $this->resolver->getCode()
-                );
-            }
-        } elseif ($resolver instanceof Net_DNS_Resolver) {
-            $this->resolver = $resolver;
-        } else {
-            throw new Services_ProjectHoneyPot_Exception(
-                'Unknown class of type: ' . get_class($resolver),
-                self::ERR_USER
-            );
-        }
+        $this->resolver = $resolver;
+        return $this;
     }
-    
+
     /**
      * Set the format to retrieve the info in.
-     * 
+     *
      * @param string $format Either 'array' or 'object'.
-     * 
-     * @return string
+     *
+     * @return $this
      * @throws Services_ProjectHoneyPot_Exception On unknown/unsupported format.
      */
     public function setResponseFormat($format)
@@ -198,47 +192,46 @@ class Services_ProjectHoneyPot
                 self::ERR_USER
             );
         }
-        return $this->responseFormat = $format;
+        $this->responseFormat = $format;
+        return $this;
     }
 
     /**
      * Set the access key necessary to use this service.
      *
      * @param string $accesskey Another accesskey.
-     * 
+     *
      * @return string $accesskey
-     * @see    Services_ProjectHoneyPot::factory
+     * @see    self::__construct()
      */
     public function setAccesskey($accesskey)
     {
         $this->accesskey = $accesskey;
-        return $accesskey;
+        return $this;
     }
 
     /**
      * Sets another (than the default) server to query.
      *
      * @param string $server The DNS server to query.
-     * 
+     *
      * @return string $server
      */
     public function setDnsBlacklist($server)
     {
         $this->dns_blacklist = $server;
-        return $server;
+        return $this;
     }
 
     /**
      * Checks if the supplied IP is listed.
-     * 
+     *
      * @param string|array $ip IP or hostname. Using an IP is more "expensive"
      *                     because we will need to resolve it.
-     * 
+     *
      * @return Services_ProjectHoneyPot_Response_ResultSet
-     * @uses   Services_ProjectHoneyPot::getHostForLookup
-     * @uses   Services_ProjectHoneyPot::parseResponse
-     * @uses   Services_ProjectHoneyPot::$resolver
-     * @see    Services_ProjectHoneyPot::factory
+     * @uses   self::$resolver
+     * @see    self::__construct()
      * @throws Services_ProjectHoneyPot_Exception
      * @todo   Check multiple if host has 1+ IPs.
      */
@@ -272,12 +265,28 @@ class Services_ProjectHoneyPot
                 self::ERR_NO_IP
             );
         }
+        return $this->makeRequest($ips);
+    }
 
+    /**
+     * Make the actual lookup.
+     *
+     * @param array $ips
+     *
+     * @return Services_ProjectHoneyPot_Response_ResultSet
+     * @see    self::query()
+     * @see    Net_DNS2_Resolver::query()
+     * @uses   self::$resolver
+     * @uses   self::getHostForLooup()
+     */
+    protected function makeRequest(array $ips)
+    {
         $data = array();
         foreach ($ips AS $ip) {
             if (isset($data[$ip])) {
                 continue;
             }
+
             if (Net_CheckIP2::isValid($ip) !== true) {
                 $resp = $this->resolver->query($ip);
                 if (isset($resp->answer[0]->address) === false) {
@@ -286,14 +295,25 @@ class Services_ProjectHoneyPot
                          self::ERR_NO_IP
                     );
                 }
-                $ip = $resp->answer[0]->address;
+                $ip2 = $resp->answer[0]->address;
+            } else {
+                $ip2 = $ip;
             }
 
-            $host = $this->getHostForLookup($ip);
-            $response = $this->resolver->query($host);
-            if ($response === false) {
-                array_push($data, array($ip => $response));
-                continue;
+            $host = $this->getHostForLookup($ip2);
+            try {
+                $response = $this->resolver->query($host);
+            } catch (Net_DNS2_Exception $e) {
+                // FIXME: when Net_DNS2 has error codes
+                if ($e->getMessage() == 'DNS request failed: The domain name referenced in the query does not exist.') {
+                    array_push($data, array($ip => false));
+                    continue;
+                }
+                throw new Services_ProjectHoneyPot_Exception(
+                    "Unknown error from Net_DNS2: {$e->getMessage()}",
+                    self::ERR_UNKNOWN_RESP,
+                    $e
+                );
             }
             if (is_object($response) === false) {
                 throw new Services_ProjectHoneyPot_Exception(
@@ -316,7 +336,7 @@ class Services_ProjectHoneyPot
      * Builds the host to query.
      *
      * @param string $ip The IP which needs to be resolved.
-     * 
+     *
      * @return string $ip_query
      * @uses   Services_ProjectHoneyPot::$accesskey
      * @uses   Services_ProjectHoneyPot::$dns_blacklist
@@ -337,7 +357,7 @@ class Services_ProjectHoneyPot
      * {@see Services_ProjectHoneyPot_Response::parse()}
      *
      * @param object $respObj Whatever we received from the API.
-     * 
+     *
      * @return array|Services_ProjectHoneyPot_Response_Result
      * @link   http://projecthoneypot.org/httpbl_api.php
      * @see    self::query()
@@ -355,23 +375,23 @@ class Services_ProjectHoneyPot
      * 'guilty'. ;-)
      *
      * @param string|array $honeypot Set a honeypot (string), or multiple.
-     * 
+     *
      * @return null|string|array $honeypot
      * @uses   Services_ProjectHoneyPot::$honeypot
      * @todo   Implement.
-     */    
+     */
     public function setHoneypot($honeypot = null)
     {
         if (null !== $honeypot && $honeypot != '') {
             $this->honeypot = $honeypot;
         }
-        return $honeypot;
+        return $this;
     }
 
     /**
      * Mostly a placeholder for what's to come. Currently we return a honeypot
      * which has been supplied with self::setHoneypot before.
-     * 
+     *
      * @todo   Implement retrieval of honeypots from projecthoneypot.org.
      * @return string|array|null
      * @uses   Services_ProjectHoneyPot::$honeypot
@@ -389,8 +409,8 @@ class Services_ProjectHoneyPot
      * Enable debug on runtime.
      *
      * @param boolean $debug To debug (true), or not to debug (false)?
-     * 
-     * @return boolean
+     *
+     * @return $this
      * @uses   Services_ProjectHoneyPot::$debug
      */
     public function setDebug($debug)
@@ -399,7 +419,6 @@ class Services_ProjectHoneyPot
             return $this->debug;
         }
         $this->debug = $debug;
-        return $debug;
+        return $this;
     }
 }
-?>
