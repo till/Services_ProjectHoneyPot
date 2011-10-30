@@ -1,18 +1,18 @@
 <?php
 /**
  * Copyright (c) 2008-2011, Till Klampaeckel
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
- * 
+ *
  *  * Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *  * Redistributions in binary form must reproduce the above copyright notice, this
  *    list of conditions and the following disclaimer in the documentation and/or
  *    other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -44,8 +44,6 @@
  * @license  http://www.opensource.org/licenses/bsd-license.php The BSD License
  * @version  Release: @package_version@
  * @link     http://code.google.com/p/services-projecthoneypot/
- * @uses     Net_CheckIP2
- * @uses     Net_DNS
  * @property boolean $suspicious Is the IP suspicious?
  * @property boolean $harvester  Is the IP a known harvester?
  * @property boolean $comment_spammer Is the IP a known comment spammer?
@@ -65,7 +63,7 @@
 class Services_ProjectHoneyPot_Response_Result
 {
     /**
-     * @var mixed $_store 
+     * @var mixed $_store
      * @see self::__construct()
      */
     private $_store;
@@ -81,15 +79,16 @@ class Services_ProjectHoneyPot_Response_Result
     {
         // set defaults
         $this->_store = array(
-            'suspicious' => false,
-            'harvester' => false,
+            'suspicious'      => false,
+            'harvester'       => false,
             'comment_spammer' => false,
-            'search_engine' => false,
-            'last_activity' => null,
-            'score' => null,
-            'type' => null,
-            'type_hr' => null,
-            'debug' => null);
+            'search_engine'   => false,
+            'last_activity'   => null,
+            'score'           => null,
+            'type'            => null,
+            'type_hr'         => null,
+            'debug'           => null
+        );
     }
 
     /**
@@ -186,7 +185,7 @@ class Services_ProjectHoneyPot_Response_Result
      *
      * @return mixed
      * @link   http://www.projecthoneypot.org/httpbl_api.php
-     */ 
+     */
     public function getScore()
     {
         return $this->_store['score'];
@@ -222,11 +221,10 @@ class Services_ProjectHoneyPot_Response_Result
      */
     public function __toString()
     {
-        $_str = '';   
+        $_str = '';
         foreach ($_store AS $k=>$v) {
-            $_str .= "$k: $value\n";
+            $_str .= "{$k}: {$value}" . PHP_EOL;
         }
         return $_str;
-    }
+   }
 }
-?>
