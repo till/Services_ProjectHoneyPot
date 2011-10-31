@@ -83,11 +83,6 @@ class Services_ProjectHoneyPot
     const ERR_USER         = 672;
 
     /**
-     * @var $responseFormats array
-     */
-    static public $responseFormats = array('array', 'object');
-
-    /**
      * @var  string $accesskey Your API access key.
      * @see  Services_ProjectHoneyPot::__construct()
      * @see  Services_ProjectHoneyPot::setAccesskey()
@@ -121,11 +116,6 @@ class Services_ProjectHoneyPot
      * @see Services_ProjectHoneyPot::getHoneypot
      */
     protected $honeypot;
-
-    /**
-     * @var string Return an array or an object in the end?
-     */
-    protected $responseFormat = 'array'; // object
 
     /**
      * Initialize the class.
@@ -186,13 +176,7 @@ class Services_ProjectHoneyPot
      */
     public function setResponseFormat($format)
     {
-        if (!in_array($format, self::$responseFormats)) {
-            throw new Services_ProjectHoneyPot_Exception(
-                'Unknown or unsupported format: ' . $format,
-                self::ERR_USER
-            );
-        }
-        $this->responseFormat = $format;
+        trigger_error("This is deprecated with 0.6.0 and will be removed in 0.7.0.");
         return $this;
     }
 
@@ -365,8 +349,7 @@ class Services_ProjectHoneyPot
      */
     protected function parseResponse($respObj)
     {
-        return Services_ProjectHoneyPot_Response::parse($respObj,
-            $this->responseFormat, $this->debug);
+        return Services_ProjectHoneyPot_Response::parse($respObj, $this->debug);
     }
 
     /**

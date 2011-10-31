@@ -60,7 +60,7 @@
  * @property string $type_hr A HR representation of $type.
  * @property mixed $debug Yes, no, maybe so?! ;)
  */
-class Services_ProjectHoneyPot_Response_Result
+class Services_ProjectHoneyPot_Response_Result implements ArrayAccess
 {
     /**
      * @var mixed $_store
@@ -226,5 +226,41 @@ class Services_ProjectHoneyPot_Response_Result
             $_str .= "{$k}: {$value}" . PHP_EOL;
         }
         return $_str;
-   }
+    }
+
+    /**
+     * @return boolean
+     * @see    ArrayAccess::offsetExists()
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->_store[$offset]);
+    }
+
+    /**
+     * @return mixed
+     * @see    ArrayAccess::offsetGet()
+     */
+    public function offsetGet($offset)
+    {
+        return isset($this->_store[$offset]) ? $this->_store[$offset] : null;
+    }
+
+    /**
+     * @return void
+     * @see    ArrayAccess::offsetSet()
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->_store[$offset] = $value;
+    }
+
+    /**
+     * @return void
+     * @see    ArrayAccess::offsetUnset()
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->_store[$offset]);
+    }
 }

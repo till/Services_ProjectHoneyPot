@@ -1,18 +1,18 @@
 <?php
 /**
  * Copyright (c) 2008-2011, Till Klampaeckel
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
- * 
+ *
  *  * Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *  * Redistributions in binary form must reproduce the above copyright notice, this
  *    list of conditions and the following disclaimer in the documentation and/or
  *    other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -80,25 +80,14 @@ class Services_ProjectHoneyPot_Response
      * </ul>
      *
      * @param Net_DNS2_Packet_Response $respObj The response.
-     * @param String                   $format  Do we return an array or object?
      * @param boolean                  $debug   Include entire response from API or not?
      *
-     * @return mixed
-     * @see    Services_ProjectHoneyPot_Result
+     * @return Services_ProjectHoneyPot_Result
      */
-    static function parse(Net_DNS2_Packet_Response $respObj, $format = 'array',
-        $debug = false
-    ) {
+    static function parse(Net_DNS2_Packet_Response $respObj, $debug = false) {
         $ip = $respObj->answer[0]->address;
 
         list($foobar, $last_activity, $score, $type) = explode('.', $ip);
-
-        if (!in_array($format, Services_ProjectHoneyPot::$responseFormats)) {
-            throw new Services_ProjectHoneyPot_Response_Exception(
-                'Unknown format: ' . $format,
-                Services_ProjectHoneyPot::ERR_INTERNAL
-            );
-        }
 
         /* Services_ProjectHoneyPot_Result */
         include_once dirname(__FILE__) . '/Response/Result.php';
@@ -195,14 +184,6 @@ class Services_ProjectHoneyPot_Response
         $response->type          = $type;
         $response->type_hr       = $type_hr;
 
-        if ($format != 'object') {
-            switch ($format) {
-            case 'array':
-                return $response->toArray();
-            case 'string':
-                return (string) $response;
-            }
-        }
         return $response;
     }
 }

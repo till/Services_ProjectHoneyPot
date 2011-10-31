@@ -10,7 +10,7 @@ require_once 'Services/ProjectHoneyPot.php';
 include dirname(__FILE__) . '/config.php';
 $sphp   = new Services_ProjectHoneyPot($access_key);
 $ip     = $valid_host;;
-$status = $sphp->setResponseFormat('object')->query($ip);
+$status = $sphp->query($ip);
 $result = $status->current();
 
 var_dump($result[$ip]);
