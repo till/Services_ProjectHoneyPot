@@ -13,20 +13,19 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>till@php.net</email>
   <active>yes</active>
  </lead>
- <date>2011-01-13</date>
- <time>10:50:00</time>
+ <date>2011-10-30</date>
+ <time>20:30:00</time>
  <version>
-  <release>0.5.3</release>
-  <api>0.5.2</api>
+  <release>0.6.0</release>
+  <api>0.6.0</api>
  </version>
  <stability>
-  <release>alpha</release>
-  <api>alpha</api>
+  <release>beta</release>
+  <api>beta</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
  <notes>
-* bugfix: Net_CheckIP2 changed API so we had to update
-* bump up Net_CheckIP2 version requirement
+
  </notes>
  <contents>
   <dir name="/">
@@ -95,6 +94,38 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>0.6.0</release>
+    <api>0.6.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2011-10-30</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">The BSD License</license>
+   <notes>
+* updated from Net_DNS to Net_DNS2
+  * includes one todo, related to: https://code.google.com/p/netdns2/issues/detail?id=4
+  * updated examples to reflect change
+* code no longer uses PEAR.php (yay!)
+* set*() provide a fluent interface now
+* response-format change (BC-break):
+  * always Services_ProjectHoneyPot_Result
+  * implements ArrayAccess
+* bugfix: 'Harvester' wasn't marked as one in resultset
+* cs fixes, whitespace, etc.
+* testing:
+  * added AllTests.php to make it compatible with PEAR testsuite
+  * added skip.inc to make .phpt "fail" gracefully
+  * fixed and updated tests (0.5.3 broken them)
+* refactored parts of the code:
+  * query() >> makeRequest()
+  * more type-hinting
+  * update to docblocks
+   </notes>
+  </release>
   <release>
    <version>
     <release>0.5.3</release>
