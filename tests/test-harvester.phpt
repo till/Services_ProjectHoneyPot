@@ -14,28 +14,18 @@ $result = $sphp->query($ip);
 
 var_dump(count($result));
 foreach ($result as $res) {
-    var_dump($res[$ip]);
+    $info = $res[$ip];
+    var_dump($info['harvester']);
+    var_dump($info['last_activity']);
+    var_dump($info['score']);
+    var_dump($info['type']);
+    var_dump(get_class($info));
 }
 ?>
 --EXPECT--
 int(1)
-array(9) {
-  ["suspicious"]=>
-  NULL
-  ["harvester"]=>
-  int(1)
-  ["comment_spammer"]=>
-  NULL
-  ["search_engine"]=>
-  NULL
-  ["last_activity"]=>
-  string(1) "1"
-  ["score"]=>
-  string(1) "1"
-  ["type"]=>
-  string(1) "2"
-  ["type_hr"]=>
-  string(9) "Harvester"
-  ["debug"]=>
-  NULL
-}
+int(1)
+string(1) "1"
+string(1) "1"
+string(1) "2"
+string(40) "Services_ProjectHoneyPot_Response_Result"
