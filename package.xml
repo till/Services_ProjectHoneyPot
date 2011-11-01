@@ -79,6 +79,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <file name="example-resolver.php" role="doc" />
    </dir>
    <dir name="tests" baseinstalldir="Services_ProjectHoneyPot">
+    <file name="AllTests.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
     <file name="config.php-dist" role="test" />
     <file name="skip.inc" role="test" />
     <file name="test-harvester.phpt" role="test" />
