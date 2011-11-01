@@ -299,7 +299,7 @@ class Services_ProjectHoneyPot
                     $e
                 );
             }
-            if (is_object($response) === false) {
+            if (!($response instanceof Net_DNS2_Packet_Response)) {
                 throw new Services_ProjectHoneyPot_Exception(
                     'Unknown response.',
                     self::ERR_UNKNOWN_RESP
@@ -342,14 +342,14 @@ class Services_ProjectHoneyPot
      *
      * @param object $respObj Whatever we received from the API.
      *
-     * @return array|Services_ProjectHoneyPot_Response_Result
+     * @return Services_ProjectHoneyPot_Response_Result
      * @link   http://projecthoneypot.org/httpbl_api.php
      * @see    self::query()
-     * @throws Services_ProjectHoneyPot_Exception
      */
-    protected function parseResponse($respObj)
+    protected function parseResponse(Net_DNS2_Packet_Response $respObj)
     {
-        return Services_ProjectHoneyPot_Response::parse($respObj, $this->debug);
+        $response = new Services_ProjectHoneyPot_Response($respObj, $this->debug);
+        return $response->parse();
     }
 
     /**

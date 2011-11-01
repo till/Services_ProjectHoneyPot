@@ -63,6 +63,35 @@ class Services_ProjectHoneyPot_Response
     const RESPONSE_HR_COMMENTSPAMMER = 'Comment Spammer';
 
     /**
+     * @var boolean $debug
+     */
+    protected $debug;
+
+    /**
+     * @var Net_DNS2_Packet_Response $respObj
+     */
+    protected $respObj;
+
+    /**
+     * __construct
+     *
+     * @param Net_DNS2_Packet_Response $respObj The response.
+     * @param boolean                  $debug   Include entire response from API or not?
+     *
+     * @return $this
+     * @throws InvalidArgumentException
+     */
+    public function __construct(Net_DNS2_Packet_Response $respObj, $debug = false)
+    {
+        $this->respObj = $respObj;
+
+        if (!is_bool($debug)) {
+            throw new InvalidArgumentException("Debug must be a boolean.");
+        }
+        $this->debug = $debug;
+    }
+
+    /**
      * Parse the response into an array or object.
      *
      * It will look like the following, the object response follows the same
@@ -79,18 +108,16 @@ class Services_ProjectHoneyPot_Response
      *   <li>$response['type_hr'] -> Human-readable equivalent of 'type'.</li>
      * </ul>
      *
-     * @param Net_DNS2_Packet_Response $respObj The response.
-     * @param boolean                  $debug   Include entire response from API or not?
-     *
      * @return Services_ProjectHoneyPot_Result
      */
-    static function parse(Net_DNS2_Packet_Response $respObj, $debug = false) {
-        $ip = $respObj->answer[0]->address;
+    public function parse()
+    {
+        $ip = $this->respObj->answer[0]->address;
 
         list($foobar, $last_activity, $score, $type) = explode('.', $ip);
 
         /* Services_ProjectHoneyPot_Result */
-        include_once dirname(__FILE__) . '/Response/Result.php';
+        include_once 'Services/ProjectHoneyPot/Response/Result.php';
         if (!class_exists('Services_ProjectHoneyPot_Response_Result')) {
             throw new Services_ProjectHoneyPot_Response_Exception(
                'Unable to load file: Result.php',
@@ -103,8 +130,8 @@ class Services_ProjectHoneyPot_Response
         $response->comment_spammer = null;
         $response->search_engine   = null;
 
-        if ($debug === true) {
-            $response->debug = $respObj;
+        if ($this->debug === true) {
+            $response->debug = $this->respObj;
         } else {
             $response->debug = null;
         }
